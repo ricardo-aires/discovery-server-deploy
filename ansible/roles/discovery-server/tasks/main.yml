@@ -1,0 +1,87 @@
+---
+# tasks file for discovery-server
+- name: ensure dependencies are installed
+  package:
+    name: "{{ discovery_server_dependecies }}"
+    state: present
+
+- name: ensure group exists
+  group:
+    name: "{{ discovery_server_user.group }}"
+    gid: "{{ discovery_server_user.gid }}"
+    state: present
+
+- name: ensure user exists
+  user:
+    name: "{{ discovery_server_user.username }}"
+    group: "{{ discovery_server_user.group }}"
+    uid: "{{ discovery_server_user.uid }}"
+    comment: "{{ discovery_server_user.username }}"
+    state: present
+
+- name: ensure latest tarball is fetch
+  get_url:
+    url: "{{ discovery_server_tarball_url }}"
+    dest: "/opt/{{ discovery_server_tarball }}"
+    owner: "{{ discovery_server_user.username }}"
+    group: "{{ discovery_server_user.group }}"
+    mode: '0440'
+    checksum: "{{ discovery_server_tarball_checksum }}"
+
+- name: extract tarball
+  unarchive:
+    src: "/opt/{{ discovery_server_tarball }}"
+    dest: /opt
+    owner: "{{ discovery_server_user.username }}"
+    group: "{{ discovery_server_user.group }}"
+    remote_src: yes
+  notify: restart discovery-server service
+
+- name: fix permissions
+  file:
+    path: "{{ discovery_server_home_dir }}"
+    owner: "{{ discovery_server_user.username }}"
+    group: "{{ discovery_server_user.group }}"
+    recurse: yes
+
+- name: ensure necessary directories exists
+  file:
+    path: "{{ item }}"
+    owner: "{{ discovery_server_user.username }}"
+    group: "{{ discovery_server_user.group }}"
+    mode: '0775'
+    state: directory
+  loop:
+    - "{{ discovery_server_conf_dir }}"
+    - "{{ discovery_server_data_dir }}"
+
+- name: ensure setup files are in-place
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ discovery_server_conf_dir }}/{{ item }}"
+    owner: "{{ discovery_server_user.username }}"
+    group: "{{ discovery_server_user.group }}"
+    mode: '0640'
+  loop:
+    - config.properties
+    - jvm.config
+    - node.properties
+
+- name: setup systemctl discovery-server service
+  template:
+    src: discovery-server.service.j2
+    dest: /etc/systemd/system/discovery-server.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart discovery-server service
+
+- name: Force all notified handlers to run at this point
+  meta: flush_handlers
+
+- name: ensure discovery-server service is enabled and started
+  service:
+    name: discovery-server
+    state: started
+    enabled: yes
+    daemon_reload: yes

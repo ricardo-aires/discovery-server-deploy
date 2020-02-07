@@ -1,0 +1,17 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "centos/7"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.cpus = 1
+    vb.memory = 2048
+    vb.customize ["modifyvm", :id, "--audio", "none"]
+  end
+
+  config.vm.define "discovery" do |dis|
+    dis.vm.hostname = "discovery.lab.com"
+    dis.vm.network "private_network", ip: "192.168.33.20"
+  end
+
+end

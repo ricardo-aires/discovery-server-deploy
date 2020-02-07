@@ -1,0 +1,17 @@
+---
+# defaults file for discovery-server
+# user for discovery-server
+discovery_server_user:
+  username: presto
+  group: presto
+  uid: 996
+  gid: 993
+  comment: Presto
+# installation of discovery-server
+discovery_server_version: "1.30"
+discovery_server_tarball_checksum: md5:57044b7938b492e0b9402999a381b9f8
+# discovery settings
+discovery_server_ip: "{{ hostvars['discovery']['ansible_eth1']['ipv4']['address'] }}"
+discovery_server_port: 8411
+discovery_server_heap_size: 1G
+discovery_server_env: test

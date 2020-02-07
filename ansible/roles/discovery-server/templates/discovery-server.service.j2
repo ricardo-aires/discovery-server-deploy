@@ -1,0 +1,18 @@
+[Unit]
+Description=Discovery Server
+Documentation=http://prestodb.io
+Requires=network.target
+After=network.target
+
+[Service]
+Type=forking
+User={{ discovery_server_user.username }}
+Group={{ discovery_server_user.group }}
+ExecStart={{ discovery_server_home_dir }}/bin/launcher start
+ExecStop={{ discovery_server_home_dir }}/bin/launcher stop
+WorkingDirectory={{ discovery_server_home_dir }}/bin/
+TimeoutSec=180
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,13 @@
+---
+# vars file for discovery-server
+# installation of discovery-server
+discovery_server_dependecies:
+  - java-1.8.0-openjdk
+discovery_server_repo: https://repo1.maven.org/maven2/com/facebook/airlift/discovery/discovery-server
+discovery_server_distro_name: "discovery-server-{{ discovery_server_version }}"
+discovery_server_tarball: "{{ discovery_server_distro_name }}.tar.gz"
+discovery_server_tarball_url: "{{ discovery_server_repo }}/{{ discovery_server_version }}/{{ discovery_server_tarball }}"
+# directories for discovery-server
+discovery_server_home_dir: "/opt/{{ discovery_server_distro_name }}"
+discovery_server_conf_dir: "{{ discovery_server_home_dir }}/etc"
+discovery_server_data_dir: "/var/lib/discovery-server/data"
