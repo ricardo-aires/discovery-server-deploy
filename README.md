@@ -4,8 +4,8 @@
 
 In this repository we will provide some examples of deploying the [Discovery Server](https://repo1.maven.org/maven2/com/facebook/airlift/discovery/discovery-server/1.30/discovery-server-1.30.tar.gz) found in the [Facebook Maven](https://mvnrepository.com/artifact/com.facebook.airlift.discovery/discovery-server) in order to run it sepparetly.
 
-- [Ansible](./ansible/roles/discovery-server/README.MD)
-- [Docker](./containers/docker/README.MD)
+- [Ansible](./ansible/roles/discovery-server/README.md)
+- [Docker](./containers/docker/README.md)
 
 > In the Presto repo we show Kubernetes integration.
 
